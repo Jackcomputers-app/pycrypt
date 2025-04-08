@@ -1,3 +1,3 @@
 # pycrypt
  
-This is stil under develment. The release is comming soon.
+This is still under develment. The release is comming soon.
