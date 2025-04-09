@@ -2,7 +2,7 @@
  
 This is still under develment. The release is comming soon.
 
-Make sure that you have PYMongo installed.
+Make sure that you have PYMongo installed:
 
 ```python
 
