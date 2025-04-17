@@ -26,6 +26,12 @@ In order for this app to work, you will need the following Python extentions:
 
 ```python
 
+pip install flask
+
+```
+
+```python
+
 pip install pymongo
 
 ```
