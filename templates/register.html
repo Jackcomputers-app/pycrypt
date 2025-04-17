@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Register a New User</h2>
+<form method="POST" action="/register">
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text" class="form-control" name="username" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" name="password" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Role</label>
+        <select class="form-select" name="role" required>
+            <option value="sender">Sender</option>
+            <option value="receiver">Receiver</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Register</button>
+</form>
+{% endblock %}

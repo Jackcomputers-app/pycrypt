@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Send a Message</h2>
+<form method="POST" action="/send_message">
+    <div class="mb-3">
+        <label class="form-label">To (Receiver Username)</label>
+        <input type="text" class="form-control" name="to" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Message</label>
+        <textarea class="form-control" name="message" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Send</button>
+</form>
+{% endblock %}
