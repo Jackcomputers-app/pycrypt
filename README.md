@@ -9,7 +9,20 @@
 
  ```
 
+ 2. Download this repo on you computer/server.
+
+ ```bash
+
+ wget
+
+ ```
+
+ 3. 
+
 Make sure that you have PYMongo installed:
+
+
+In order for this app to work, you will need the following Python extentions:
 
 ```python
 
@@ -17,10 +30,21 @@ pip install pymongo
 
 ```
 
+```python
+
+pip install cryptography
+
+```
 
 ```python
 
-pip install pymongo
+pip install PyJWT
+
+```
+
+```python
+
+pip install bcrypt
 
 ```
 
