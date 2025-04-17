@@ -17,9 +17,7 @@
 
  ```
 
- 3. 
-
-Make sure that you have PYMongo installed:
+ 3. Make sure that you have PYMongo installed:
 
 
 In order for this app to work, you will need the following Python extentions:
