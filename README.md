@@ -17,10 +17,12 @@
 
  ```
 
- 3. Run sudo apt update
+ 3. Run sudo apt update and install an unzip tool
 ```bash
 
 sudo apt update
+sudo apt install unzip
+
 
 ```
 
