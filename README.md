@@ -13,17 +13,44 @@
 
  ```bash
 
- wget
+ wget https://github.com/Jackcomputers-app/pycrypt/archive/refs/heads/main.zip
 
  ```
 
- 3. Make sure that you have PYMongo installed:
+ 3. Run sudo apt update
+```bash
+
+sudo apt update
+
+```
+
+4. Unzip the folder
+```bash
+
+unzip main.zip
+
+```
+
+5. Move into the directory
+```bash
 
 
-In order for this app to work, you will need the following Python extentions:
+cd pychat-main
 
+```
+
+6. Install the required python dependencies
 ```python
 
 pip install flask pymongo cryptography bcrypt PyJWT
 
 ```
+
+
+7. Create a python virtual environment. 
+```python
+
+python -m venv venv
+
+```
+8. Enter the Python virtual environment
