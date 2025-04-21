@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#Setup MySQL on the server. 
 echo "Updating packages..."
 sudo apt update
 
@@ -42,4 +43,19 @@ CREATE TABLE IF NOT EXISTS messages (
 
 EOF
 
-echo "✅ MySQL setup complete. Database 'pycrypt' and user 'pycryptuser' are ready!"
+#Part to make .env file for server. 
+echo "Generating Flask secret and Fernet key..."
+FERNET_KEY=$(python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
+FLASK_SECRET=$(python3 -c "import os; print(os.urandom(24).hex())")
+
+echo "Writing .env file..."
+cat > $ENV_FILE <<EOF
+FLASK_SECRET=$FLASK_SECRET
+FERNET_KEY=$FERNET_KEY
+DB_USER=$DB_USER
+DB_PASS=$DB_PASS
+DB_NAME=$DB_NAME
+DB_HOST=localhost
+EOF
+
+echo "MySQL and .env setup complete!"
