@@ -32,7 +32,6 @@ unzip main.zip
 5. Move into the directory
 ```bash
 
-
 cd pycrypt-main
 
 ```
