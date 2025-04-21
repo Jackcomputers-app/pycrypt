@@ -23,7 +23,6 @@
 sudo apt update
 sudo apt install unzip
 
-
 ```
 
 4. Unzip the folder
