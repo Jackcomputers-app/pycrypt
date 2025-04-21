@@ -43,20 +43,20 @@ cd pycrypt-main
 python3 -m venv venv
 
 ```
+7. Enter the Python virtual environment
+```bash
 
-7. Install the required python dependencies
+source venv/bin/activate
+
+```
+
+8. Install the required python dependencies
 ```python
 
 pip install flask pymongo cryptography bcrypt PyJWT
 
 ```
 
-8. Enter the Python virtual environment
-```bash
-
-source venv/bin/activate
-
-```
 9. Run the Bash script to set up MySQL and .env file for saying keys.
 ```bash
 
