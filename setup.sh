@@ -43,7 +43,10 @@ CREATE TABLE IF NOT EXISTS messages (
 
 EOF
 
-#Part to make .env file for server. 
+#Make .env file for the server.
+
+ENV_FILE=".env"
+
 echo "Generating Flask secret and Fernet key..."
 FERNET_KEY=$(python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
 FLASK_SECRET=$(python3 -c "import os; print(os.urandom(24).hex())")
@@ -58,4 +61,4 @@ DB_NAME=$DB_NAME
 DB_HOST=localhost
 EOF
 
-echo "MySQL and .env setup complete!"
+echo "MySQL and .env setup complete! make sure that you create an admin user by running create_admin.py"
