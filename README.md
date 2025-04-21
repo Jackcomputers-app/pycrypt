@@ -40,7 +40,7 @@ cd pycrypt-main
 6. Create a python virtual environment. 
 ```python
 
-python -m venv venv
+python3 -m venv venv
 
 ```
 
