@@ -29,29 +29,28 @@ sudo apt install unzip
 unzip main.zip
 
 ```
-
 5. Move into the directory
 ```bash
 
 
-cd pycrypt-main
+cd pycrypts-main
 
 ```
 
-6. Install the required python dependencies
+6. Create a python virtual environment. 
+```python
+
+python -m venv venv
+
+```
+
+7. Install the required python dependencies
 ```python
 
 pip install flask pymongo cryptography bcrypt PyJWT
 
 ```
 
-
-7. Create a python virtual environment. 
-```python
-
-python -m venv venv
-
-```
 8. Enter the Python virtual environment
 ```bash
 
