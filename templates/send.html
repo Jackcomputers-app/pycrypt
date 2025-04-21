@@ -1,15 +1,31 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>Send a Message</h2>
-<form method="POST" action="/send_message">
-    <div class="mb-3">
-        <label class="form-label">To (Receiver Username)</label>
-        <input type="text" class="form-control" name="to" required>
+<div class="row justify-content-center mt-4">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Send a Message</h5>
+        <hr>
+
+        {% if success %}
+          <div class="alert alert-success">{{ success }}</div>
+        {% endif %}
+
+        <form method="POST">
+          <div class="mb-3">
+            <label for="to" class="form-label">To</label>
+            <input type="text" class="form-control" id="to" name="to" required value="{{ prefill_to }}">
+          </div>
+
+          <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label">Message</label>
-        <textarea class="form-control" name="message" rows="4" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Send</button>
-</form>
+  </div>
+</div>
 {% endblock %}

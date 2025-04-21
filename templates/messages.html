@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Received Messages</h2>
+{% if messages %}
+    <ul class="list-group">
+        {% for m in messages %}
+            <li class="list-group-item">
+                <strong>From:</strong> {{ m.from }}<br>
+                <strong>Message:</strong> {{ m.message }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No messages received.</p>
+{% endif %}
+{% endblock %}

@@ -54,3 +54,24 @@ python -m venv venv
 
 ```
 8. Enter the Python virtual environment
+```bash
+
+source venv/bin/activate
+
+```
+9. Run the Bash script to set up MySQL and .env file for saying keys.
+```bash
+
+chmod +x setup.sh
+./setup.sh
+
+```
+
+10. Run and start the server. 
+```python
+
+python3 app.py
+
+```
+
+
