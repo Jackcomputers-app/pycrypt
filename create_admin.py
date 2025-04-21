@@ -41,6 +41,6 @@ try:
 except Exception as e:
     print("Error:", e)
 finally:
-    if'db' in locals() and db.is_connected();
+    if'db' in locals() and db.is_connected():
         cursor.close()
         db.close()
