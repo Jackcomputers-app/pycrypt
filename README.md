@@ -65,11 +65,17 @@ chmod +x setup.sh
 
 ```
 
-10. Run and start the server. 
+10. Next you will need to create an admin user inside the database so you can login. 
+
+```python
+
+python3 create_admin.py
+
+```
+
+11. Run and start the server. 
 ```python
 
 python3 app.py
 
 ```
-
-

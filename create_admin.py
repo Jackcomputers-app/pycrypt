@@ -1,33 +1,45 @@
-from pymongo import MongoClient
+import mysql.connector
+import bcrypt
+import getpass
+import os
+from dotenv import load_dotenv
 
-def setup_mongo_db(uri, db_name):
-    """
-    Sets up a connection to MongoDB and returns the database instance.
+load_dotenv()
 
-    :param uri: MongoDB connection string
-    :param db_name: Name of the database to connect to
-    :return: Database instance
-    """
-    try:
-        # Create a MongoDB client
-        client = MongoClient(uri)
-        
-        # Access the specified database
-        db = client[db_name]
-        
-        print(f"Connected to MongoDB database: {db_name}")
-        return db
-    except Exception as e:
-        print(f"Error connecting to MongoDB: {e}")
-        return None
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_NAME = os.getenv("DB_NAME", "pycrypt")
+DB_USER = os.getenv("DB_USER", "pycryptuser")
+DB_PASS = os.getenv("DB_PASS", "StrongPassword123")
 
-# Example usage
-if __name__ == "__main__":
-    # Replace with your MongoDB connection string and database name
-    mongo_uri = "mongodb://localhost:27017/"
-    database_name = "admin_db"
-    
-    db = setup_mongo_db(mongo_uri, database_name)
-    if db:
-        # Perform database operations here
-        pass
+print("It's time to create an Admin User")
+username = input("Enter admin username: ").strip()
+while not username:
+    username = input("You did not give me a username. You need to give me a username otherwise you will have a badtime with the program.")
+
+password = getpass.getpass("Enter admin Password:")
+confirm = getpass.getpass
+
+hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt().decode())
+
+try:
+    db = mysql.connector.connect(
+        host=DB_HOST,
+        user=DB_USER,
+        password=DB_PASS,
+        database=DB_NAME
+    )
+    cursor = db.cursor()
+
+    cursor.execute("DELETE FROM users WHERE username = %s", (username,))
+    cursor.execute(
+        "INSERT INTO users (username, password, role) VALUES (%s, %s, 'admin')",
+        (username, hashed)
+    )
+    db.commit()
+    print(f"Admin user '{username}' created successfully.")
+except Exception as e:
+    print("Error:", e)
+finally:
+    if db.is_connected():
+        cursor.close()
+        db.close()
