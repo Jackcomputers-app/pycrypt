@@ -1,68 +1,68 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, session
-from pymongo import MongoClient
+from flask import Flask, request, render_template, redirect, url_for, session, flash
+import mysql.connector
 from cryptography.fernet import Fernet
-from bson.objectid import ObjectId
-import jwt, datetime
+import jwt, datetime, os, bcrypt
 from functools import wraps
-import bcrypt
+from dotenv import load_dotenv
+print(Fernet.generate_key().decode())
+
+
+
+
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key'  # Use env variable in production
-fernet_key = Fernet.generate_key()
+app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET', 'dev-secret')
+app.secret_key = app.config['SECRET_KEY']
+
+# Fernet key for encrypting messages
+fernet_key = os.getenv("FERNET_KEY", Fernet.generate_key().decode()).encode()
 fernet = Fernet(fernet_key)
 
-# MongoDB Connection (SCRAM Authentication)
-client = MongoClient("mongodb://admin:secureAdminPass@localhost:27017/?authSource=secure_messaging")
-db = client.secure_messaging
-users = db.users
-messages = db.messages
+# Connect to MySQL
+db = mysql.connector.connect(
+    host="localhost",
+    user="pycryptuser",
+    password="StrongPassword123",
+    database="pycrypt"
+)
+cursor = db.cursor(dictionary=True)
 
-# Used for checking user token and role verficaton
-def token_required(role=None):
+def token_required(roles=None):
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
             token = session.get('token')
             if not token:
-                return redirect(url_for('login_form'))
+                return redirect(url_for('login'))
             try:
                 data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-                if role and data['role'] != role:
+                if roles and data['role'] not in roles:
                     return "Unauthorized", 403
                 request.user = data
-            except:
-                return "Invalid or expired token", 403
+            except jwt.ExpiredSignatureError:
+                session.pop('token', None)
+                return redirect(url_for('login'))
+            except Exception:
+                session.pop('token', None)
+                return redirect(url_for('login'))
             return f(*args, **kwargs)
         return wrapper
     return decorator
 
+# Routes
 @app.route('/')
 def home():
     return render_template('home.html')
-
-@app.route('/register', methods=['GET', 'POST'])
-@token_required(role='admin')
-def register_user():
-    if request.method == 'POST':
-        data = request.form
-        if users.find_one({'username': data['username']}):
-            return render_template('register.html', error='User already exists')
-
-        hashed = bcrypt.hashpw(data['password'].encode(), bcrypt.gensalt())
-        users.insert_one({
-            'username': data['username'],
-            'password': hashed,
-            'role': data['role']
-        })
-        return redirect(url_for('home'))
-    return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         data = request.form
-        user = users.find_one({'username': data['username']})
-        if not user or not bcrypt.checkpw(data['password'].encode(), user['password']):
+        cursor.execute("SELECT * FROM users WHERE username = %s", (data['username'],))
+        user = cursor.fetchone()
+
+        if not user or not bcrypt.checkpw(data['password'].encode(), user['password'].encode()):
             return render_template('login.html', error='Invalid credentials')
 
         token = jwt.encode({
@@ -72,38 +72,74 @@ def login():
         }, app.config['SECRET_KEY'], algorithm='HS256')
 
         session['token'] = token
-        return redirect(url_for('home'))
+        return redirect(url_for('dashboard'))
     return render_template('login.html')
-
-@app.route('/send', methods=['GET', 'POST'])
-@token_required(role='sender')
-def send_message():
-    if request.method == 'POST':
-        payload = request.form
-        encrypted = fernet.encrypt(payload['message'].encode())
-        messages.insert_one({
-            'from': request.user['username'],
-            'to': payload['to'],
-            'message': encrypted
-        })
-        return render_template('send.html', success='Message sent')
-    return render_template('send.html')
-
-@app.route('/messages')
-@token_required(role='receiver')
-def get_messages():
-    received = messages.find({'to': request.user['username']})
-    output = [{
-        'from': m['from'],
-        'message': fernet.decrypt(m['message']).decode()
-    } for m in received]
-    return render_template('messages.html', messages=output)
 
 @app.route('/logout')
 def logout():
     session.pop('token', None)
+    flash("You have been logged out.", "info")
     return redirect(url_for('login'))
 
+@app.route('/register', methods=['GET', 'POST'])
+@token_required(roles=['admin'])
+def register_user():
+    if request.method == 'POST':
+        data = request.form
+        cursor.execute("SELECT * FROM users WHERE username = %s", (data['username'],))
+        if cursor.fetchone():
+            return render_template('register.html', error='User already exists')
+
+        hashed = bcrypt.hashpw(data['password'].encode(), bcrypt.gensalt()).decode()
+        cursor.execute("INSERT INTO users (username, password, role) VALUES (%s, %s, %s)",
+                       (data['username'], hashed, data['role']))
+        db.commit()
+        return render_template('register.html', success='User registered successfully')
+
+    return render_template('register.html')
+
+
+@app.route('/send', methods=['GET', 'POST'])
+@token_required(roles=['sender', 'admin'])
+def send_message():
+    prefill_to = request.args.get('to', '')
+
+    if request.method == 'POST':
+        payload = request.form
+        encrypted = fernet.encrypt(payload['message'].encode()).decode()
+        cursor.execute("INSERT INTO messages (sender, receiver, message) VALUES (%s, %s, %s)",
+                       (request.user['username'], payload['to'], encrypted))
+        db.commit()
+        return render_template('send.html', success='Message sent')
+
+    return render_template('send.html', prefill_to=prefill_to)
+
+
+@app.route('/dashboard')
+@token_required()
+def dashboard():
+    username = request.user['username']
+    role = request.user['role']
+
+    if role == 'sender':
+        cursor.execute("SELECT receiver AS `with`, message FROM messages WHERE sender = %s", (username,))
+        title = "Messages You've Sent"
+    elif role == 'receiver':
+        cursor.execute("SELECT sender AS `with`, message FROM messages WHERE receiver = %s", (username,))
+        title = "Messages You've Received"
+    elif role == 'admin':
+        cursor.execute("SELECT sender AS `with`, message FROM messages")
+        title = "All Messages in System"
+    else:
+        return "Role not authorized", 403
+
+    rows = cursor.fetchall()
+    messages = [{
+        'with': row['with'],
+        'message': fernet.decrypt(row['message'].encode()).decode()
+    } for row in rows]
+
+    return render_template('dashboard.html', messages=messages, title=title)
+
 if __name__ == '__main__':
-    app.secret_key = 'another-secret-key'
     app.run(debug=True)
