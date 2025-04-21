@@ -43,7 +43,7 @@ cd pycrypt-main
 python3 -m venv venv
 
 ```
-7. Enter the Python virtual environment
+7. Enter the Python virtual environment. You will know that you are in the virtual envorment when your CLI says (.venv)
 ```bash
 
 source venv/bin/activate
