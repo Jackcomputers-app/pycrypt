@@ -24,31 +24,6 @@ In order for this app to work, you will need the following Python extentions:
 
 ```python
 
-pip install flask
+pip install flask pymongo cryptography bcrypt PyJWT
 
 ```
-
-```python
-
-pip install pymongo
-
-```
-
-```python
-
-pip install cryptography
-
-```
-
-```python
-
-pip install PyJWT
-
-```
-
-```python
-
-pip install bcrypt
-
-```
-
