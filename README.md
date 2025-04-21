@@ -34,7 +34,7 @@ unzip main.zip
 ```bash
 
 
-cd pychat-main
+cd pycrypt-main
 
 ```
 
