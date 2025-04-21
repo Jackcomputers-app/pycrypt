@@ -33,7 +33,7 @@ unzip main.zip
 ```bash
 
 
-cd pycrypts-main
+cd pycrypt-main
 
 ```
 
