@@ -19,7 +19,8 @@ while not username:
 password = getpass.getpass("Enter admin Password:")
 confirm = getpass.getpass
 
-hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt().decode())
+hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
 
 try:
     db = mysql.connector.connect(
@@ -40,6 +41,6 @@ try:
 except Exception as e:
     print("Error:", e)
 finally:
-    if db.is_connected():
+    if'db' in locals() and db.is_connected();
         cursor.close()
         db.close()

@@ -52,7 +52,7 @@ source venv/bin/activate
 8. Install the required python dependencies
 ```python
 
-pip install flask pymongo cryptography bcrypt PyJWT
+pip install flask pymongo cryptography bcrypt PyJWT mysql-connector-python python-dotenv
 
 ```
 

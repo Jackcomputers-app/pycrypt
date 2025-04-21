@@ -55,9 +55,9 @@ echo "Writing .env file..."
 cat > $ENV_FILE <<EOF
 FLASK_SECRET=$FLASK_SECRET
 FERNET_KEY=$FERNET_KEY
-DB_USER=$DB_USER
-DB_PASS=$DB_PASS
-DB_NAME=$DB_NAME
+DB_USER=$"pycryptuser"
+DB_PASS=$"StronerPassword123"
+DB_NAME=$"pycrypt"
 DB_HOST=localhost
 EOF
 
