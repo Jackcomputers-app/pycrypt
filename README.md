@@ -72,7 +72,22 @@ python3 create_admin.py
 
 ```
 
-11. Run and start the server. 
+11. Install certbot to request an SSL certificate for your domain name. 
+```bash
+sudo apt install certbot
+sudo apt install python3-certbot-nginx
+
+```
+
+12. Enable SSL(Secure Socket Layer) on your webserver. Replace Example.com with your Domain name. 
+```bash
+
+sudo certbot certonly --standalone -d example.com
+
+```
+
+
+13. Run and start the server. 
 ```bash
 
 python3 app.py

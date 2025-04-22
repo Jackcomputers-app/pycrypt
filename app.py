@@ -50,7 +50,7 @@ def token_required(roles=None):
         return wrapper
     return decorator
 
-# Routes
+# Routes in html
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -141,5 +141,7 @@ def dashboard():
 
     return render_template('dashboard.html', messages=messages, title=title)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+app.run(host="0.0.0.0", port=443, ssl_context=(
+    "/etc/letsencrypt/live/example.com/fullchain.pem",
+    "/etc/letsencrypt/live/example.com/privkey.pem"
+))

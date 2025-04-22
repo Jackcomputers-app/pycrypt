@@ -45,6 +45,11 @@ EOF
 
 #Make .env file for the server.
 
+DB_USER="pycryptuser"
+DB_PASS="StrongPassword123"
+DB_NAME="pycrypt"
+DB_HOST="localhost"
+
 ENV_FILE=".env"
 
 echo "Generating Flask secret and Fernet key..."
@@ -55,10 +60,10 @@ echo "Writing .env file..."
 cat > $ENV_FILE <<EOF
 FLASK_SECRET=$FLASK_SECRET
 FERNET_KEY=$FERNET_KEY
-DB_USER=$"pycryptuser"
-DB_PASS=$"StronerPassword123"
-DB_NAME=$"pycrypt"
-DB_HOST=localhost
+DB_USER=$DB_USER
+DB_PASS=$DB_USER
+DB_NAME=$DB_NAME
+DB_HOST=$DB_HOST
 EOF
 
 echo "MySQL and .env setup complete! make sure that you create an admin user by running create_admin.py"
