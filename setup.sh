@@ -43,6 +43,8 @@ CREATE TABLE IF NOT EXISTS messages (
 
 EOF
 
+read -p "Please enter the domain name that will be used(e.g, pycrypt.jackcomputers.app)" DOMAIN
+
 #Make .env file for the server.
 
 DB_USER="pycryptuser"
@@ -64,6 +66,9 @@ DB_USER=$DB_USER
 DB_PASS=$DB_PASS
 DB_NAME=$DB_NAME
 DB_HOST=$DB_HOST
+DOMAIN=$DOMAIN
 EOF
 
 echo "MySQL and .env setup complete! make sure that you create an admin user by running create_admin.py"
+
+

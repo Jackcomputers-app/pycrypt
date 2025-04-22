@@ -1,3 +1,4 @@
+
 from flask import Flask, request, render_template, redirect, url_for, session, flash
 import mysql.connector
 from cryptography.fernet import Fernet
@@ -5,18 +6,17 @@ import jwt, datetime, os, bcrypt
 from functools import wraps
 from dotenv import load_dotenv
 import logging
-print(Fernet.generate_key().decode())
 from logging.handlers import RotatingFileHandler
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET', 'dev-secret')
 app.secret_key = app.config['SECRET_KEY']
 
-# Fernet key for encrypting messages
 fernet_key = os.getenv("FERNET_KEY", Fernet.generate_key().decode()).encode()
 fernet = Fernet(fernet_key)
 
-# Connect to MySQL
 db = mysql.connector.connect(
     host="localhost",
     user="pycryptuser",
@@ -46,13 +46,12 @@ def token_required(roles=None):
             return f(*args, **kwargs)
         return wrapper
     return decorator
+
 def get_messages_by_user(username):
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM messages WHERE sender=%s OR receiver=%s", (username, username))
+    cursor.execute("SELECT sender, receiver, message FROM messages WHERE sender=%s OR receiver=%s", (username, username))
     return cursor.fetchall()
 
-
-# Routes in html
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -97,9 +96,7 @@ def register_user():
                        (data['username'], hashed, data['role']))
         db.commit()
         return render_template('register.html', success='User registered successfully')
-
     return render_template('register.html')
-
 
 @app.route('/send', methods=['GET', 'POST'])
 @token_required(roles=['sender', 'admin'])
@@ -116,7 +113,6 @@ def send_message():
 
     return render_template('send.html', prefill_to=prefill_to)
 
-
 @app.route('/dashboard')
 @token_required()
 def dashboard():
@@ -126,43 +122,41 @@ def dashboard():
     cursor = db.cursor(dictionary=True)
 
     if role == 'sender':
-        cursor.execute("SELECT receiver AS `with`, message FROM messages WHERE sender = %s", (username,))
+        cursor.execute("SELECT receiver AS contact, message FROM messages WHERE sender = %s", (username,))
         messages = cursor.fetchall()
         title = "Messages You've Sent"
-
     elif role == 'receiver':
-        cursor.execute("SELECT sender AS `with`, message FROM messages WHERE receiver = %s", (username,))
+        cursor.execute("SELECT sender AS contact, message FROM messages WHERE receiver = %s", (username,))
         messages = cursor.fetchall()
         title = "Messages You've Received"
-
     else:
-        messages = get_messages_by_user(username)
+        messages_raw = get_messages_by_user(username)
+        messages = [{
+            'contact': row['sender'] if row['receiver'] == username else row['receiver'],
+            'message': row['message']
+        } for row in messages_raw]
         title = "Your Messages"
 
     messages = [{
-        'with': row['with'],
+        'with': row['contact'],
         'message': fernet.decrypt(row['message'].encode()).decode()
     } for row in messages]
 
     return render_template('dashboard.html', messages=messages, title=title)
 
-app.run(host="0.0.0.0", port=443, ssl_context=(
-    "/etc/letsencrypt/live/pycrypt.jackcomputers.app/fullchain.pem",
-    "/etc/letsencrypt/live/pycrypt.jackcomputers.app/privkey.pem"
-))
+DOMAIN = os.getenv("DOMAIN", "localhost")
+
+cert_path = f"/etc/letsencrypt/live/{DOMAIN}/fullchain.pem"
+key_path = f"/etc/letsencrypt/live/{DOMAIN}/privkey.pem"
+
+if os.path.exists(cert_path) and os.path.exists(key_path):
+    app.run(host="0.0.0.0", port=443, ssl_context=(cert_path, key_path))
 
 if not os.path.exists('logs'):
     os.mkdir('logs')
 
 file_handler = RotatingFileHandler('logs/server.log', maxBytes=10240, backupCount=5)
 file_handler.setLevel(logging.INFO)
-
-formatter = logging.Formatter(
-    '%(asctime)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(formatter)
-
 app.logger.addHandler(file_handler)
-
-
-
-load_dotenv()
