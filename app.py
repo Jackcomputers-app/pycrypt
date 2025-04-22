@@ -142,6 +142,6 @@ def dashboard():
     return render_template('dashboard.html', messages=messages, title=title)
 
 app.run(host="0.0.0.0", port=443, ssl_context=(
-    "/etc/letsencrypt/live/example.com/fullchain.pem",
-    "/etc/letsencrypt/live/example.com/privkey.pem"
+    "/etc/letsencrypt/live/pycrypt.jackcomputers.app/fullchain.pem",
+    "/etc/letsencrypt/live/pycrypt.jackcomputers.app/privkey.pem"
 ))

@@ -79,10 +79,10 @@ sudo apt install python3-certbot-nginx
 
 ```
 
-12. Enable SSL(Secure Socket Layer) on your webserver. Replace Example.com with your Domain name. 
+12. Enable SSL(Secure Socket Layer) on your webserver. Replace pycrypt.jackcomputers.app with your Domain name. 
 ```bash
 
-sudo certbot certonly --standalone -d example.com
+sudo certbot certonly --standalone -d pycrypt.jackcomputers.app
 
 ```
 
