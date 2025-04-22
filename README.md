@@ -43,27 +43,27 @@ sudo apt install python3.12-venv
 
 ```
 
-6. Create a python virtual environment. 
+7. Create a python virtual environment. 
 ```python
 
 python3 -m venv venv
 
 ```
-7. Enter the Python virtual environment. You will know that you are in the virtual envorment when your CLI says (.venv)
+8. Enter the Python virtual environment. You will know that you are in the virtual envorment when your CLI says (.venv)
 ```bash
 
 source venv/bin/activate
 
 ```
 
-8. Install the required python dependencies
+9. Install the required python dependencies
 ```python
 
 pip install flask pymongo cryptography bcrypt PyJWT mysql-connector-python python-dotenv
 
 ```
 
-9. Run the Bash script to set up MySQL and .env file for saying keys.
+10. Run the Bash script to set up MySQL and .env file for saying keys.
 ```bash
 
 chmod +x setup.sh
@@ -71,7 +71,7 @@ chmod +x setup.sh
 
 ```
 
-10. Next you will need to create an admin user inside the database so you can login. 
+11. Next you will need to create an admin user inside the database so you can login. 
 
 ```bash
 
@@ -79,14 +79,14 @@ python3 create_admin.py
 
 ```
 
-11. Install certbot to request an SSL certificate for your domain name. 
+12. Install certbot to request an SSL certificate for your domain name. 
 ```bash
 sudo apt install certbot
 sudo apt install python3-certbot-nginx
 
 ```
 
-12. Enable SSL(Secure Socket Layer) on your webserver. Replace pycrypt.jackcomputers.app with your Domain name. 
+13. Enable SSL(Secure Socket Layer) on your webserver. Replace pycrypt.jackcomputers.app with your Domain name. 
 ```bash
 
 sudo certbot certonly --standalone -d pycrypt.jackcomputers.app
@@ -94,7 +94,7 @@ sudo certbot certonly --standalone -d pycrypt.jackcomputers.app
 ```
 
 
-13. Run and start the server. 
+14. Run and start the server. 
 ```bash
 
 python3 app.py
