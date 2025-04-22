@@ -4,12 +4,9 @@ from cryptography.fernet import Fernet
 import jwt, datetime, os, bcrypt
 from functools import wraps
 from dotenv import load_dotenv
+import logging
 print(Fernet.generate_key().decode())
-
-
-
-
-load_dotenv()
+from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET', 'dev-secret')
@@ -49,6 +46,11 @@ def token_required(roles=None):
             return f(*args, **kwargs)
         return wrapper
     return decorator
+def get_messages_by_user(username):
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM messages WHERE sender=%s OR receiver=%s", (username, username))
+    return cursor.fetchall()
+
 
 # Routes in html
 @app.route('/')
@@ -121,23 +123,26 @@ def dashboard():
     username = request.user['username']
     role = request.user['role']
 
+    cursor = db.cursor(dictionary=True)
+
     if role == 'sender':
         cursor.execute("SELECT receiver AS `with`, message FROM messages WHERE sender = %s", (username,))
+        messages = cursor.fetchall()
         title = "Messages You've Sent"
+
     elif role == 'receiver':
         cursor.execute("SELECT sender AS `with`, message FROM messages WHERE receiver = %s", (username,))
+        messages = cursor.fetchall()
         title = "Messages You've Received"
-    elif role == 'admin':
-        cursor.execute("SELECT sender AS `with`, message FROM messages")
-        title = "All Messages in System"
-    else:
-        return "Role not authorized", 403
 
-    rows = cursor.fetchall()
+    else:
+        messages = get_messages_by_user(username)
+        title = "Your Messages"
+
     messages = [{
         'with': row['with'],
         'message': fernet.decrypt(row['message'].encode()).decode()
-    } for row in rows]
+    } for row in messages]
 
     return render_template('dashboard.html', messages=messages, title=title)
 
@@ -145,3 +150,19 @@ app.run(host="0.0.0.0", port=443, ssl_context=(
     "/etc/letsencrypt/live/pycrypt.jackcomputers.app/fullchain.pem",
     "/etc/letsencrypt/live/pycrypt.jackcomputers.app/privkey.pem"
 ))
+
+if not os.path.exists('logs'):
+    os.mkdir('logs')
+
+file_handler = RotatingFileHandler('logs/server.log', maxBytes=10240, backupCount=5)
+file_handler.setLevel(logging.INFO)
+
+formatter = logging.Formatter(
+    '%(asctime)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+
+app.logger.addHandler(file_handler)
+
+
+
+load_dotenv()

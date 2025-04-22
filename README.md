@@ -82,7 +82,6 @@ python3 create_admin.py
 12. Install certbot to request an SSL certificate for your domain name. 
 ```bash
 sudo apt install certbot
-sudo apt install python3-certbot-nginx
 
 ```
 

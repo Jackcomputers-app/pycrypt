@@ -57,11 +57,11 @@ FERNET_KEY=$(python3 -c "from cryptography.fernet import Fernet; print(Fernet.ge
 FLASK_SECRET=$(python3 -c "import os; print(os.urandom(24).hex())")
 
 echo "Writing .env file..."
-cat > $ENV_FILE <<EOF
+cat > "$ENV_FILE" <<EOF
 FLASK_SECRET=$FLASK_SECRET
 FERNET_KEY=$FERNET_KEY
 DB_USER=$DB_USER
-DB_PASS=$DB_USER
+DB_PASS=$DB_PASS
 DB_NAME=$DB_NAME
 DB_HOST=$DB_HOST
 EOF
