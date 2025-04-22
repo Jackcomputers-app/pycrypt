@@ -44,7 +44,7 @@ source venv/bin/activate
 
 9. Install the required python dependencies
 ```python
-pip install flask pymongo cryptography bcrypt PyJWT mysql-connector-python python-dotenv
+pip install flask pymongo cryptography bcrypt PyJWT mysql-connector-python python-dotenv 
 ```
 
 10. Run the Bash script to set up MySQL and .env file for saying keys.
@@ -68,6 +68,8 @@ sudo apt install certbot
 ```bash
 sudo certbot certonly --standalone -d pycrypt.jackcomputers.app
 ```
+
+14. Open app.py in a text editor 
 
 
 14. Run and start the server. 
