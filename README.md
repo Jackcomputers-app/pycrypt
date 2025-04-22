@@ -36,6 +36,13 @@ cd pycrypt-main
 
 ```
 
+6. Install the Python virtual envioment toolkit for your version of Python. 
+```bash
+
+sudo apt install python3.12-venv
+
+```
+
 6. Create a python virtual environment. 
 ```python
 
