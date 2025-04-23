@@ -72,6 +72,14 @@ sudo certbot certonly --standalone -d pycrypt.jackcomputers.app
 14. Open app.py in a text editor 
 
 
+14. Make start.sh
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+
+
 14. Run and start the server. 
 ```bash
 python3 app.py

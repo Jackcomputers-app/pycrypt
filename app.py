@@ -152,10 +152,10 @@ def dashboard():
 
 DOMAIN = os.getenv("DOMAIN", "localhost")
 
-app.run(host="0.0.0.0", port=443, ssl_context=(
-    f"/etc/letsencrypt/live/{DOMAIN}/fullchain.pem",
-    f"/etc/letsencrypt/live/{DOMAIN}/privkey.pem"
-))
+if __name__ == "__main__":
+    print("Flask app loaded. Use Gunicorn to run this app.")
+
+
 
 if not os.path.exists('logs'):
     os.mkdir('logs')
