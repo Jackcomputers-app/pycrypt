@@ -13,11 +13,32 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="{{ url_for('home') }}">PYcrypt</a>
+<<<<<<< Updated upstream
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto">
           {% if session.token %}
             <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+=======
+  
+      <!-- Bootstrap Togel for mobile devices -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- Collapsible content -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto d-flex flex-wrap align-items-center gap-2">
+  
+          {% if request.user %}
+            <li class="nav-item">
+              <a class="btn btn-outline-light" href="{{ url_for('dashboard') }}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-outline-danger" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+>>>>>>> Stashed changes
           {% else %}
             <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
           {% endif %}
@@ -57,7 +78,7 @@
 <footer class="footer mt-5 p-3 text-center text-muted">
   <hr>
   <small>&copy; {{ year or "2025" }} PYcrypt</small>
-  <small>This project is made for CYB 220 by Jack McCotter.</small>
+  <small>This project is made for CYB 220 by Jack McCotter. I in dev or main</small>
 </footer>
 
 </body>
