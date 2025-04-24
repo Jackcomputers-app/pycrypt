@@ -69,13 +69,8 @@ sudo apt install certbot
 sudo certbot certonly --standalone -d pycrypt.jackcomputers.app
 ```
 
-14. Make start.sh
+14. Run start.sh to start the server.
 ```bash
 chmod +x start.sh
 ./start.sh
-```
-
-14. Run and start the server. 
-```bash
-
 ```
