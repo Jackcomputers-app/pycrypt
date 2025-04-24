@@ -128,34 +128,48 @@ def dashboard():
     cursor = db.cursor(dictionary=True)
 
     if role == 'sender':
-        cursor.execute("SELECT receiver AS `with`, message FROM messages WHERE sender = %s", (username,))
+        cursor.execute("SELECT receiver AS contact, message FROM messages WHERE sender = %s", (username,))
         messages = cursor.fetchall()
         title = "Messages You've Sent"
 
     elif role == 'receiver':
-        cursor.execute("SELECT sender AS `with`, message FROM messages WHERE receiver = %s", (username,))
+        cursor.execute("SELECT sender AS contact, message FROM messages WHERE receiver = %s", (username,))
         messages = cursor.fetchall()
         title = "Messages You've Received"
-        cursor
 
     else:
-        messages = get_messages_by_user(username)
+        # Admin view — get both sent and received messages
+        cursor.execute("SELECT sender, receiver, message FROM messages WHERE sender=%s OR receiver=%s", (username, username))
+        raw = cursor.fetchall()
+        messages = []
+        for row in raw:
+            contact = row['receiver'] if row['sender'] == username else row['sender']
+            messages.append({
+                'contact': contact,
+                'message': row['message']
+            })
         title = "Your Messages"
 
-    messages = [{
-    'with': row['contact'],
-    'message': fernet.decrypt(row['message'].encode()).decode()
-    } for row in messages]
+    # Now decrypt all messages safely
+    decrypted = []
+    for row in messages:
+        try:
+            decrypted.append({
+                'with': row['contact'],
+                'message': fernet.decrypt(row['message'].encode()).decode()
+            })
+        except Exception as e:
+            decrypted.append({
+                'with': row['contact'],
+                'message': "[Unable to decrypt]"
+            })
 
-
-    return render_template('dashboard.html', messages=messages, title=title)
+    return render_template('dashboard.html', messages=decrypted, title=title)
 
 DOMAIN = os.getenv("DOMAIN", "localhost")
 
 if __name__ == "__main__":
     print("Flask app loaded. Use Gunicorn to run this app.")
-
-
 
 if not os.path.exists('logs'):
     os.mkdir('logs')

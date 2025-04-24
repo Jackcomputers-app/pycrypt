@@ -1,13 +1,13 @@
 # PYcrypt
  
 
- 1. Make sure you have Python 3 install on your server. For PYcrypt to work propply yuo will need Python 3.9 or Higher.
+ 1. Make sure you have Python 3 installed on your server. For PYcrypt to work properly, you will need Python 3.9 or higher. This Documentation is written for python 3.12
 
  ```python
  python3 --version
  ```
 
- 2. Download this repo on you computer/server.
+ 2. Download this repo on your computer/server.
 
  ```bash
  wget https://github.com/Jackcomputers-app/pycrypt/archive/refs/heads/main.zip
@@ -37,7 +37,7 @@ sudo apt install python3.12-venv
 ```python
 python3 -m venv venv
 ```
-8. Enter the Python virtual environment. You will know that you are in the virtual envorment when your CLI says (.venv)
+8. Enter the Python virtual environment. You will know that you are in the virtual environment when your CLI says (.venv)
 ```bash
 source venv/bin/activate
 ```
@@ -53,7 +53,7 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-11. Next you will need to create an admin user inside the database so you can login. 
+11. Next you will need to create an admin user inside the database so you can login to the website.
 
 ```bash
 python3 create_admin.py
@@ -69,18 +69,13 @@ sudo apt install certbot
 sudo certbot certonly --standalone -d pycrypt.jackcomputers.app
 ```
 
-14. Open app.py in a text editor 
-
-
 14. Make start.sh
 ```bash
 chmod +x start.sh
 ./start.sh
 ```
 
-
-
 14. Run and start the server. 
 ```bash
-python3 app.py
+
 ```
