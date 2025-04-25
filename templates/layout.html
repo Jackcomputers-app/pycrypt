@@ -26,20 +26,20 @@
   
           {% if request.user %}
             <li class="nav-item">
-              <a class="btn btn-outline-light" href="{{ url_for('dashboard') }}">Dashboard</a>
+              <a class="btn btn-outline-light" href="{{ url_for('dashboard') }}"><i class="fa-solid fa-message"></i> Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="btn btn-outline-danger" href="{{ url_for('logout') }}">Logout</a>
+              <a class="btn btn-outline-danger" href="{{ url_for('logout') }}"><i class="fa-solid fa-xmark"></i> Logout</a>
             </li>
           {% else %}
             <li class="nav-item">
-              <a class="btn btn-outline-primary" href="{{ url_for('login') }}">Login</a>
+              <a class="btn btn-outline-primary" href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
             </li>
           {% endif %}
   
           {% if request.user and request.user['role'] == 'admin' %}
             <li class="nav-item">
-              <a class="btn btn-success" href="{{ url_for('register_user') }}">Create User</a>
+              <a class="btn btn-success" href="{{ url_for('register_user') }}"><i class="fa-solid fa-users"></i> Create User</a>
             </li>
           {% endif %}
         </ul>

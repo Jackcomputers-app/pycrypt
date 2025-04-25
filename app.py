@@ -127,30 +127,23 @@ def dashboard():
 
     cursor = db.cursor(dictionary=True)
 
-    if role == 'sender':
-        cursor.execute("SELECT receiver AS contact, message FROM messages WHERE sender = %s", (username,))
-        messages = cursor.fetchall()
-        title = "Messages You've Sent"
+    cursor.execute("""
+        SELECT sender, receiver, message FROM messages
+        WHERE sender = %s OR receiver = %s
+    """, (username, username))
 
-    elif role == 'receiver':
-        cursor.execute("SELECT sender AS contact, message FROM messages WHERE receiver = %s", (username,))
-        messages = cursor.fetchall()
-        title = "Messages You've Received"
+    raw = cursor.fetchall()
+    messages = []
+    for row in raw:
+        contact = row['receiver'] if row['sender'] == username else row['sender']
+        messages.append({
+            'contact': contact,
+            'message': row['message']
+        })
 
-    else:
-        # Admin view — get both sent and received messages
-        cursor.execute("SELECT sender, receiver, message FROM messages WHERE sender=%s OR receiver=%s", (username, username))
-        raw = cursor.fetchall()
-        messages = []
-        for row in raw:
-            contact = row['receiver'] if row['sender'] == username else row['sender']
-            messages.append({
-                'contact': contact,
-                'message': row['message']
-            })
-        title = "Your Messages"
+    title = "Your Messages"
 
-    # Now decrypt all messages safely
+    
     decrypted = []
     for row in messages:
         try:
@@ -165,6 +158,7 @@ def dashboard():
             })
 
     return render_template('dashboard.html', messages=decrypted, title=title)
+
 
 DOMAIN = os.getenv("DOMAIN", "localhost")
 

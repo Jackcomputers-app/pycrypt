@@ -5,9 +5,10 @@
 <hr>
 
 {% if request.user['role'] in ['sender', 'admin'] %}
+
   <div class="mb-3 text-end">
-    <a href="{{ url_for('send_message') }}" class="btn btn-primary btn-lg">
-      Send New Message
+    <a href="{{ url_for('send_message') }}" class="btn btn-primary btn-lg"><i class="fa-solid fa-paper-plane"></i>
+       Send New Message
     </a>
   </div>
 {% endif %}
