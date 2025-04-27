@@ -5,7 +5,6 @@ import jwt, datetime, os, bcrypt
 from functools import wraps
 from dotenv import load_dotenv
 import logging
-print(Fernet.generate_key().decode())
 from logging.handlers import RotatingFileHandler
 load_dotenv()
 
@@ -163,7 +162,7 @@ def dashboard():
 DOMAIN = os.getenv("DOMAIN", "localhost")
 
 if __name__ == "__main__":
-    print("Flask app loaded. Use Gunicorn to run this app.")
+    print("The app has loaded. Please note you will need to use guncorn to run the app itself. Run the ./start.sh file to start the server.")
 
 if not os.path.exists('logs'):
     os.mkdir('logs')
