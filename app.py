@@ -27,7 +27,7 @@ db = mysql.connector.connect(
 cursor = db.cursor(dictionary=True)
 
 
-# If my SQL connection fail this script will try the connection again.
+# If MySQL connection fail this script will try the connection again.
 def ensure_db_connection():
     global db, cursor
     try:
