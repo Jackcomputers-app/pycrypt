@@ -26,6 +26,23 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor(dictionary=True)
 
+
+# If my SQL connection fail this script will try the connection again.
+def ensure_db_connection():
+    global db, cursor
+    try:
+        db.ping(reconnect=True, attempts=3, delay=5)
+    except mysql.connector.Error as e:
+        print(f"Database connection lost: {e}. Trying to reconnect...")
+        db = mysql.connector.connect(
+            host="localhost",
+            user="pycryptuser",
+            password="StrongPassword123",
+            database="pycrypt"
+        )
+        cursor = db.cursor(dictionary=True)
+
+
 def token_required(roles=None):
     def decorator(f):
         @wraps(f)
