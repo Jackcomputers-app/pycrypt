@@ -65,9 +65,16 @@ def token_required(roles=None):
         return wrapper
     return decorator
 def get_messages_by_user(username):
+    if not db.is_connected():
+        db.reconnect()
+
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM messages WHERE sender=%s OR receiver=%s", (username, username))
+    cursor.execute(
+        "SELECT * FROM messages WHERE sender=%s OR receiver=%s",
+        (username, username)
+    )
     return cursor.fetchall()
+
 
 
 # Routes in html
