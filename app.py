@@ -43,6 +43,11 @@ def ensure_db_connection():
         cursor = db.cursor(dictionary=True)
 
 
+@app.before_request
+def keep_db_connection_alive():
+    ensure_db_connection()
+
+
 def token_required(roles=None):
     def decorator(f):
         @wraps(f)
